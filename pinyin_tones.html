@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>汉语拼音发音表（带声调）</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .group {
+      margin-bottom: 30px;
+    }
+    .group-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .pinyin-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pinyin-button {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+    .pinyin-button:hover {
+      background-color: #d0ebff;
+    }
+  </style>
+</head>
+<body>
+  <h1>汉语拼音发音表（带声调）</h1>
+  <div id="pinyin-container"></div>
+
+  <script>
+    const initials = ["", "b", "p", "m", "f", "d", "t", "n", "l",
+                      "g", "k", "h", "j", "q", "x",
+                      "zh", "ch", "sh", "r", "z", "c", "s", "y", "w"];
+
+    const finals = [
+      "a", "o", "e", "i", "u", "ü",
+      "ai", "ei", "ui", "ao", "ou", "iu",
+      "ie", "üe", "er",
+      "an", "en", "in", "un", "ün",
+      "ang", "eng", "ing", "ong"
+    ];
+
+    const pinyinToChinese = {
+      "a":"啊", "o":"喔", "e":"鹅", "i":"衣", "u":"乌", "ü":"鱼",
+      "ai":"爱", "ei":"诶", "ui":"威", "ao":"奥", "ou":"欧", "iu":"优",
+      "ie":"耶", "üe":"约", "er":"儿",
+      "an":"安", "en":"恩", "in":"因", "un":"温", "ün":"晕",
+      "ang":"昂", "eng":"嗯", "ing":"英", "ong":"翁",
+      "ba":"吧", "bo":"波", "bi":"比", "bu":"布", "bai":"白", "bei":"杯", "bao":"包", "ban":"班", "ben":"本", "bang":"棒", "beng":"崩", "bing":"冰",
+      "pa":"爬", "po":"坡", "pi":"皮", "pu":"扑", "pai":"拍", "pao":"跑", "pou":"剖", "pan":"盘", "pen":"喷", "pang":"胖", "peng":"朋", "ping":"拼",
+      "ma":"妈", "mo":"摸", "me":"么", "mi":"米", "mu":"木", "mai":"买", "mei":"美", "mao":"猫", "mou":"某", "man":"慢", "men":"门", "mang":"忙", "meng":"梦", "ming":"明",
+      "fa":"发", "fo":"佛", "fu":"服", "fei":"飞", "fan":"饭", "fen":"分", "fang":"房", "feng":"风",
+      "da":"大", "de":"的", "di":"弟", "du":"读", "dai":"带", "dao":"到", "dou":"豆", "dan":"单", "den":"登", "dang":"当", "deng":"灯", "ding":"丁", "dong":"东",
+      "ta":"他", "te":"特", "ti":"提", "tu":"图", "tai":"太", "tao":"桃", "tou":"头", "tan":"谈", "tang":"汤", "teng":"疼", "ting":"听", "tong":"通",
+      "na":"那", "ne":"呢", "ni":"你", "nu":"奴", "nü":"女", "nai":"奶", "nei":"内", "nao":"脑", "nan":"南", "nen":"嫩", "nang":"囊", "neng":"能", "ning":"宁", "nong":"农",
+      "la":"拉", "le":"了", "li":"力", "lu":"路", "lü":"吕", "lai":"来", "lei":"雷", "lao":"老", "lou":"楼", "lan":"蓝", "leng":"冷", "ling":"灵", "long":"龙",
+      "ga":"嘎", "ge":"哥", "gu":"古", "gai":"该", "gei":"给", "gao":"高", "gou":"狗", "gan":"干", "gen":"根", "gang":"刚", "geng":"耕", "gong":"工",
+      "ka":"卡", "ke":"可", "ku":"哭", "kai":"开", "kao":"考", "kou":"口", "kan":"看", "ken":"肯", "kang":"康", "keng":"坑", "kong":"空",
+      "ha":"哈", "he":"喝", "hu":"胡", "hai":"海", "hei":"黑", "hao":"好", "hou":"后", "han":"汗", "hen":"狠", "hang":"航", "heng":"横", "hong":"红",
+      "ji":"鸡", "ju":"居", "jia":"家", "jie":"节", "jiao":"叫", "jiu":"久", "jian":"见", "jin":"金", "jiang":"讲", "jing":"京", "jiong":"炯",
+      "qi":"七", "qu":"去", "qia":"恰", "qie":"切", "qiao":"桥", "qiu":"球", "qian":"前", "qin":"亲", "qiang":"强", "qing":"青", "qiong":"穷",
+      "xi":"西", "xu":"虚", "xia":"下", "xie":"谢", "xiao":"小", "xiu":"秀", "xian":"先", "xin":"心", "xiang":"想", "xing":"星", "xiong":"雄",
+      "zhi":"知", "zha":"炸", "zhe":"这", "zhu":"住", "zhao":"照", "zhou":"周", "zhan":"站", "zhen":"真", "zhang":"张", "zheng":"正", "zhong":"中",
+      "chi":"吃", "cha":"茶", "che":"车", "chu":"出", "chao":"超", "chou":"抽", "chan":"产", "chen":"陈", "chang":"长", "cheng":"成", "chong":"虫",
+      "shi":"是", "sha":"沙", "she":"舍", "shu":"书", "shao":"烧", "shou":"手", "shan":"山", "shen":"深", "shang":"上", "sheng":"生",
+      "ri":"日", "ran":"然", "ren":"人", "rang":"让", "reng":"仍", "rong":"容",
+      "zi":"子", "zu":"祖", "zan":"赞", "zen":"怎", "zong":"宗",
+      "ci":"此", "cu":"粗", "cao":"草", "can":"餐", "cen":"岑", "cang":"仓", "cong":"聪",
+      "si":"思", "su":"苏", "sao":"扫", "san":"三", "sen":"森", "sang":"桑", "song":"松",
+      "ya":"呀", "yo":"哟", "ye":"也", "you":"有", "yan":"眼", "yin":"因", "yang":"样", "ying":"影", "yong":"用",
+      "wa":"娃", "wo":"我", "wu":"无", "wai":"外", "wei":"为", "wan":"晚", "wen":"问", "wang":"王", "weng":"翁"
+    };
+
+    const toneMap = {
+      'a': ['ā', 'á', 'ǎ', 'à'],
+      'o': ['ō', 'ó', 'ǒ', 'ò'],
+      'e': ['ē', 'é', 'ě', 'è'],
+      'i': ['ī', 'í', 'ǐ', 'ì'],
+      'u': ['ū', 'ú', 'ǔ', 'ù'],
+      'ü': ['ǖ', 'ǘ', 'ǚ', 'ǜ']
+    };
+
+    function applyTone(pinyin, toneIndex) {
+      const vowels = ['a', 'o', 'e', 'i', 'u', 'ü'];
+      for (let v of vowels) {
+        if (pinyin.includes(v)) {
+          const toneChar = toneMap[v]?.[toneIndex];
+          if (!toneChar) return pinyin;
+          return pinyin.replace(v, toneChar);
+        }
+      }
+      return pinyin;
+    }
+
+    const container = document.getElementById('pinyin-container');
+
+    initials.forEach(initial => {
+      const group = document.createElement('div');
+      group.className = 'group';
+
+      const title = document.createElement('div');
+      title.className = 'group-title';
+      title.innerText = initial === "" ? "无声母（单韵母）" : `声母：${initial}`;
+      group.appendChild(title);
+
+      const list = document.createElement('div');
+      list.className = 'pinyin-list';
+
+      finals.forEach(final => {
+        const base = initial + final;
+        if (!pinyinToChinese[base]) return;
+
+        for (let i = 0; i < 4; i++) {
+          const toned = applyTone(base, i);
+          const btn = document.createElement('div');
+          btn.className = 'pinyin-button';
+          btn.innerText = toned;
+          btn.onclick = () => speak(base);
+          list.appendChild(btn);
+        }
+      });
+
+      group.appendChild(list);
+      container.appendChild(group);
+    });
+
+    function speak(pinyin) {
+      const utterance = new SpeechSynthesisUtterance();
+      utterance.lang = 'zh-CN';
+      utterance.text = pinyinToChinese[pinyin] || pinyin;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
