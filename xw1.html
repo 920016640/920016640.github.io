@@ -65,13 +65,11 @@
 <style>
 	.floating-icon {
 		position: fixed;
-		right: 100px;
+		right: 200px;
 		bottom: 20px;
 		z-index: 9999;
-		background-color: #ffffff; /* 可以换成你想要的背景色 */
-		border-radius: 100%; /* 圆形按钮 */
-		padding: 10px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		border-radius: 50%; /* 圆形按钮 */
+		padding: 20px;
 		cursor: pointer;
 		transition: background-color 0.3s ease;
 	}
@@ -79,11 +77,9 @@
 		width: 40px; /* 控制图标大小 */
 		height: 40px;
 	}
-	.floating-icon:hover {
-		background-color: #0056b3; /* 鼠标悬停时改变背景颜色 */
-	}
 	</style>
-	
+
+
 	<script>
 	$(function() {
 		var $floatingIcon = $(".floating-icon");
@@ -103,7 +99,7 @@
 	
 
 	
-	
+
 <!--begin::Body-->
 <body>
 
@@ -508,29 +504,30 @@
 
 
 
-<a href="https://work.weixin.qq.com/kfid/kfc7a06298f09cec559" class="floating-icon" title="联系客服">
-    <h4>在线沟通</h4>
+
+
+<div class="btn-style-3 btn-hover-2 floating-icon">
+    <a href="https://work.weixin.qq.com/kfid/kfc7a06298f09cec559" 
+    class="floating-icon animated bs3-black-text bs3-btn-bg bs3-ptb bs3-ptb bs3-border-radius ptb-2-white-hover" 
+   title="">
+    在线沟通
     <!-- <img src="/assets/assets-zycy/images/logo/logo_01.png" alt="联系客服"> -->
-</a >
-
-
+    </a>
+</div>
 
 <!-- Footer -->
 <footer class="footer-area">
     <div class="container">
         <div class="footer-top pt-50 pb-50">
+
+
+         
+
+
             <div class="footer-img">
                 <a href="#">
                     <img src="/assets/assets-zycy/images/logo/logo_01.png" alt="">
                 </a>
-
-
-
-
-
-
-
-
             </div>
 
 
